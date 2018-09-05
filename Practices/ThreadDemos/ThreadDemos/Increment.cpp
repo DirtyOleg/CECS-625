@@ -13,12 +13,12 @@ void inc()
 {	
 	float x;
 
-	//mutex.lock();
+	mutex.lock();
 	x = value;
 	//Sleep(1);
 	std::this_thread::sleep_for(std::chrono::microseconds(1));
 	value = x + 1;
-	//mutex.unlock();
+	mutex.unlock();
 }
 
 void Increment() 

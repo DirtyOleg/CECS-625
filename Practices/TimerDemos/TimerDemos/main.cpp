@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#define _N	(10000000)		// Number of vector elements
+#define _N	(14000000)		// Number of vector elements
 
 float SequentialDot(const std::vector<float> &v1, const std::vector<float> &v2);
 float SequentialDot2(const std::vector<float> &v1, const std::vector<float> &v2);

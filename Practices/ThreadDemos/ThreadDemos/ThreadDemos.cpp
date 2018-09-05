@@ -102,6 +102,10 @@ private:
 void threadDemo5()
 {
 	HelloWorldFunctor F(10);
+	//functor
+	F();
+	std::cout << "print F" << std::endl;
+
 	std::thread t(F);
 	t.join();
 
