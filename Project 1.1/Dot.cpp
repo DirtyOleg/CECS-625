@@ -43,6 +43,29 @@ float SequentialDot(const std::vector<float> &v1, const std::vector<float> &v2)
 	return result;
 }
 
+#define _PARTS (8)
+float SequentialDot2(const std::vector<float> &v1, const std::vector<float> &v2)
+{
+	size_t length = (v1.size() <= v2.size() ? v1.size() : v2.size());
+	float result = 0;
+	float partial_result[_PARTS];
+	std::vector<int> limits = bounds(_PARTS, length);
+
+	for (int j = 0; j < _PARTS; j++)
+	{
+		partial_result[j] = 0;
+
+		for (int i = limits[j]; i < limits[j + 1]; ++i)
+		{
+			partial_result[j] += v1[i] * v2[i];
+		}
+	}
+
+	for (int j = 0; j < _PARTS; j++)
+		result += partial_result[j];
+
+	return result;
+}
 //////////////////////////////////////////////////////////////////////////////////// 
 //
 // Parallel dot product implementation, using mutex
