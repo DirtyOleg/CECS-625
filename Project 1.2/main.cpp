@@ -20,7 +20,7 @@
 #include <omp.h> 
 
 
-#define _N	20000000000 //1900000000	// prime numbers limit
+#define _N	2000000000 //1900000000	// prime numbers limit
 #define _NT	4			// number of threads
 
 // global shared variables 
@@ -257,15 +257,15 @@ int main()
 	Seq_Primes();
 	seq_time = GetCounter();
 
-	//Report("Sequential computing results:");
+	Report("Sequential computing results:");
 	std::cout << "\tTotal time used: " << seq_time << " seconds" << std::endl << std::endl;
 
-	//StartCounter();
-	//MultiThreads_Primes();
-	//MT_time = GetCounter();
+	StartCounter();
+	MultiThreads_Primes();
+	MT_time = GetCounter();
 
-	//Report("C++11 multithreading results:");
-	//std::cout << "\tTotal time used: " << MT_time << " seconds" << std::endl << std::endl;
+	Report("C++11 multithreading results:");
+	std::cout << "\tTotal time used: " << MT_time << " seconds" << std::endl << std::endl;
 
 	system("pause");
 
