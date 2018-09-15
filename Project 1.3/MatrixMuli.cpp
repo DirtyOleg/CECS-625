@@ -13,6 +13,7 @@ void matrixMul3(double* C, double* A, double* B, int HA, int WA, int WB);	// CPU
 void dgemm(char transa, char transb, int m, int n, int k,
 	double alpha, double a[], int lda, double b[], int ldb, double beta,
 	double c[], int ldc);
+bool CompareResult(double* firstArray, double* secondArray, int height, int width);
 
 
 
@@ -63,6 +64,16 @@ void MatrixMultiTiming(int heightA, int widthA, int widthB)
 	seq_time = GetCounter();
 	std::cout << "total time used for using dgemm is " << seq_time << std::endl;
 	std::cout << "Ref_C[100] = " << Ref_C[100] << std::endl;
+
+	bool isEqual = CompareResult(C, Ref_C, heightC, widthC);
+	if (isEqual)
+	{
+		std::cout << "matrixMul3 and dgemm produce same results" << std::endl;
+	}
+	else
+	{
+		std::cout << "matrixMul3 and dgemm produce different results" << std::endl;
+	}
 }
 
 //======================================================================================
@@ -148,4 +159,17 @@ void matrixMul3(double* C, double* A, double* B, int HA, int WA, int WB)
 			C[row + col * HA] = Cvalue;  // Note column-major !!
 		}
 	}
+}
+
+bool CompareResult(double* firstArray, double* secondArray, int height, int width)
+{
+	for (size_t i = 0; i < height * width; i++)
+	{
+		if (firstArray[i] != secondArray[i])
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

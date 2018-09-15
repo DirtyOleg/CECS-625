@@ -20,13 +20,22 @@
 #include <omp.h> 
 
 
-#define _N	2000000000 //1900000000	// prime numbers limit
-#define _NT	4			// number of threads
+#define _N 1900000000	// prime numbers limit
+//#define _NT	4			// number of threads
 
 // global shared variables 
 unsigned char prime[_N + 2];	// in the end, prime[i] = 1 if i prime, else 0 
 unsigned int  nextbase;		// next sieve multiplier to be used 
 							// lock for the shared variable nextbase
+void ResetValues()
+{
+	for (size_t i = 0; i < _N + 2; i++)
+	{
+		prime[i] = 1;
+	}
+
+	nextbase = 0;
+}
 
 void Report(std::string mesg)
 {
@@ -157,7 +166,7 @@ void workerMT(int tid) // tid is the thread number (0,1,...)
 
 }
 
-void MultiThreads_Primes()
+void MultiThreads_Primes4()
 {
 	// Mark all even numbers nonprime, and the rest "prime until shown otherwise" 
 	prime[2] = 1;
@@ -170,16 +179,87 @@ void MultiThreads_Primes()
 	nextbase = 3;
 	int tid;
 
-	std::thread  threads[_NT];
-	for (tid = 0; tid < _NT; tid++)
+	std::thread  threads[4];
+	for (tid = 0; tid < 4; tid++)
 	{
 		threads[tid] = std::thread(workerMT, tid);
 	}
-	for (tid = 0; tid < _NT; tid++)
+	for (tid = 0; tid < 4; tid++)
 	{
 		threads[tid].join();
 	}
+}
 
+void MultiThreads_Primes6()
+{
+	// Mark all even numbers nonprime, and the rest "prime until shown otherwise" 
+	prime[2] = 1;
+	for (int i = 3; i <= _N;)
+	{
+		prime[i++] = 1;
+		prime[i++] = 0;
+	}
+
+	nextbase = 3;
+	int tid;
+
+	std::thread  threads[6];
+	for (tid = 0; tid < 6; tid++)
+	{
+		threads[tid] = std::thread(workerMT, tid);
+	}
+	for (tid = 0; tid < 6; tid++)
+	{
+		threads[tid].join();
+	}
+}
+
+void MultiThreads_Primes12()
+{
+	// Mark all even numbers nonprime, and the rest "prime until shown otherwise" 
+	prime[2] = 1;
+	for (int i = 3; i <= _N;)
+	{
+		prime[i++] = 1;
+		prime[i++] = 0;
+	}
+
+	nextbase = 3;
+	int tid;
+
+	std::thread  threads[12];
+	for (tid = 0; tid < 12; tid++)
+	{
+		threads[tid] = std::thread(workerMT, tid);
+	}
+	for (tid = 0; tid < 12; tid++)
+	{
+		threads[tid].join();
+	}
+}
+
+void MultiThreads_Primes16()
+{
+	// Mark all even numbers nonprime, and the rest "prime until shown otherwise" 
+	prime[2] = 1;
+	for (int i = 3; i <= _N;)
+	{
+		prime[i++] = 1;
+		prime[i++] = 0;
+	}
+
+	nextbase = 3;
+	int tid;
+
+	std::thread  threads[16];
+	for (tid = 0; tid < 16; tid++)
+	{
+		threads[tid] = std::thread(workerMT, tid);
+	}
+	for (tid = 0; tid < 16; tid++)
+	{
+		threads[tid].join();
+	}
 }
 
 //=======================================================================================
@@ -253,6 +333,7 @@ int main()
 
 	std::cout << "Findind primes less than or equal to " << _N << " ---------> \n\n";
 
+	ResetValues();
 	StartCounter();
 	Seq_Primes();
 	seq_time = GetCounter();
@@ -260,11 +341,36 @@ int main()
 	Report("Sequential computing results:");
 	std::cout << "\tTotal time used: " << seq_time << " seconds" << std::endl << std::endl;
 
+	ResetValues();
 	StartCounter();
-	MultiThreads_Primes();
+	MultiThreads_Primes4();
 	MT_time = GetCounter();
 
-	Report("C++11 multithreading results:");
+	Report("C++11 multithreading results using 4 threads:");
+	std::cout << "\tTotal time used: " << MT_time << " seconds" << std::endl << std::endl;
+
+	ResetValues();
+	StartCounter();
+	MultiThreads_Primes6();
+	MT_time = GetCounter();
+
+	Report("C++11 multithreading results using 6 threads:");
+	std::cout << "\tTotal time used: " << MT_time << " seconds" << std::endl << std::endl;
+
+	ResetValues();
+	StartCounter();
+	MultiThreads_Primes12();
+	MT_time = GetCounter();
+
+	Report("C++11 multithreading results using 12 threads:");
+	std::cout << "\tTotal time used: " << MT_time << " seconds" << std::endl << std::endl;
+
+	ResetValues();
+	StartCounter();
+	MultiThreads_Primes16();
+	MT_time = GetCounter();
+
+	Report("C++11 multithreading results using 16 threads:");
 	std::cout << "\tTotal time used: " << MT_time << " seconds" << std::endl << std::endl;
 
 	system("pause");
