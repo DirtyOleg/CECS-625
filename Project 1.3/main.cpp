@@ -6,7 +6,7 @@ using namespace std;
 
 void MatrixMultiTiming(int heightA, int widthA, int widthB);
 
-#define rowA 960
+#define rowA 640
 #define colA rowA
 #define colB rowA
 #define rowB colA
