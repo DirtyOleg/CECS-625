@@ -6,6 +6,7 @@
 #include <random>
 
 #include "timers.h"
+#include "chTimer.h"
 
 void matrixMul1(double* C, double* A, double* B, int HA, int WA, int WB);	// CPU matrix multiplication (row-major)
 void matrixMul2(double* C, double* A, double* B, int HA, int WA, int WB);	// CPU matrix multiplication (row-major)
@@ -20,11 +21,12 @@ void MatrixMultiTiming(int heightA, int widthA, int widthB)
 {
 	int heightB = widthA, heightC = heightA, widthC = widthB;
 	double *A, *B, *C, *Ref_C;
-	double seq_time;
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<> dist(0, 1);
+
+	chTimerTimestamp start, stop;
 
 	A = (double *)malloc(heightA * widthA * sizeof(double));		assert(A);
 	B = (double *)malloc(heightB * widthB * sizeof(double));		assert(B);
@@ -38,30 +40,30 @@ void MatrixMultiTiming(int heightA, int widthA, int widthB)
 	for (int i = 0; i < heightC * widthC; ++i)
 		C[i] = Ref_C[i] = 0;
 
-		
-	StartCounter();
+	printf("Double precision %dx%d matrix times %dx%d matrix:\n\n", heightA, widthA, heightB, widthB);
+/*
+	chTimerGetTime(&start);
 	matrixMul1(C, A, B, heightA, widthA, widthB);
-	seq_time = GetCounter();
-	std::cout << "total time used for using matrixMul1 is " << seq_time << std::endl;
+	chTimerGetTime(&stop);
+	printf("matrixMul1 timing : %12.6lf seconds\n", chTimerElapsedTime(&start, &stop));
 	std::cout << "C[100] = " << C[100] << std::endl;
 
-	StartCounter();
+	chTimerGetTime(&start);
 	matrixMul2(C, A, B, heightA, widthA, widthB);
-	seq_time = GetCounter();
-	std::cout << "total time used for using matrixMul2 is " << seq_time << std::endl;
-	std::cout << "C[100] = " << C[100] << std::endl;
-
-	StartCounter();
+	chTimerGetTime(&stop);
+	printf("matrixMul2 timing : %12.6lf seconds\n", chTimerElapsedTime(&start, &stop));
+*/
+	chTimerGetTime(&start);
 	matrixMul3(C, A, B, heightA, widthA, widthB);
-	seq_time = GetCounter();
-	std::cout << "total time used for using matrixMul3 is " << seq_time << std::endl;
+	chTimerGetTime(&stop);
+	printf("matrixMul3 timing : %12.6lf seconds\n", chTimerElapsedTime(&start, &stop));
 	std::cout << "C[100] = " << C[100] << std::endl;
 
+	chTimerGetTime(&start);
 	//  Ref_C := alpha*op( A )*op( B ) + beta*C
-	StartCounter();
 	dgemm('n', 'n', heightA, widthB, widthA, 1.0, A, widthA, B, heightB, 1.0, Ref_C, widthB);
-	seq_time = GetCounter();
-	std::cout << "total time used for using dgemm is " << seq_time << std::endl;
+	chTimerGetTime(&stop);
+	printf("dgemm timing : %12.6lf seconds\n", chTimerElapsedTime(&start, &stop));
 	std::cout << "Ref_C[100] = " << Ref_C[100] << std::endl;
 }
 
@@ -148,9 +150,4 @@ void matrixMul3(double* C, double* A, double* B, int HA, int WA, int WB)
 			C[row + col * HA] = Cvalue;  // Note column-major !!
 		}
 	}
-}
-
-void CompareResult(double* A, double* B)
-{
-
 }
